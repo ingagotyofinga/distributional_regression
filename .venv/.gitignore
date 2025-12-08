@@ -1,0 +1,12 @@
+# IDE / OS
+.idea/
+.DS_Store
+
+# Python env + caches
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# Large / local artifacts (keep local)
+results/
+data/
