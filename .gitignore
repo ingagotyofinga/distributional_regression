@@ -7,6 +7,6 @@
 __pycache__/
 .ipynb_checkpoints/
 
-# Large / local artifacts (keep local)
+# Large / local artifacts
 results/
 data/
