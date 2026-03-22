@@ -6,6 +6,8 @@ from pathlib import Path
 import torch, os, json, random
 import numpy as np
 
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 def fit_local_map(
     mu_0,
     train_dataset,
@@ -32,11 +34,19 @@ def fit_local_map(
     scheduler_ema_beta=0.9,
     # NEW: optional reference weights for weighted MNIST
     mu0_w=None,
+    device=None,
 ):
     """
     Train a local map centered at reference mu_0 using kernel-weighted loss.
     Returns histories plus the best validation and its identity ratio.
     """
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    mu_0 = mu_0.to(device)
+    if mu0_w is not None:
+        mu0_w = mu0_w.to(device)
+
     # Early stop is effectively disabled unless you change this:
     early_stop_patience = patience * 3  # TEST: no early stop
     lrs = []
@@ -56,7 +66,7 @@ def fit_local_map(
         hidden_dim=128,  # try 128 or 256
         mode="residual",
         residual_head='monos'
-    )
+    ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     # Scheduler: Reduce LR on plateau (with sensible settings for noisy curves)
@@ -164,9 +174,13 @@ def fit_local_map(
                 mu_w = nu_w = None
                 active_regime = "gmm"
 
-            mu_i, nu_i = mu_i.squeeze(0), nu_i.squeeze(0)
-            if mu_w is not None: mu_w = mu_w.squeeze(0)
-            if nu_w is not None: nu_w = nu_w.squeeze(0)
+            mu_i = mu_i.squeeze(0).to(device)
+            nu_i = nu_i.squeeze(0).to(device)
+
+            if mu_w is not None:
+                mu_w = mu_w.squeeze(0).to(device)
+            if nu_w is not None:
+                nu_w = nu_w.squeeze(0).to(device)
 
             if mode == "affine":
                 alpha, B = model.predict_params(mu_i, mu_w if mu_w is not None else None)
@@ -189,7 +203,7 @@ def fit_local_map(
 
                 # print(f"Training loss:, {loss}, Weight: {w}")
 
-            optimizer.zero_grad()
+            optimizer.zero_grad(set_to_none=True)
             with anomaly_ctx:
                 loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -245,9 +259,13 @@ def fit_local_map(
                     mu_w = nu_w = None
                     active_regime = "gmm"
 
-                mu_i, nu_i = mu_i.squeeze(0), nu_i.squeeze(0)
-                if mu_w is not None: mu_w = mu_w.squeeze(0)
-                if nu_w is not None: nu_w = nu_w.squeeze(0)
+                mu_i = mu_i.squeeze(0).to(device)
+                nu_i = nu_i.squeeze(0).to(device)
+
+                if mu_w is not None:
+                    mu_w = mu_w.squeeze(0).to(device)
+                if nu_w is not None:
+                    nu_w = nu_w.squeeze(0).to(device)
 
                 if mode == "affine":
                     a, B = model.predict_params(mu_i, mu_w if mu_w is not None else None)

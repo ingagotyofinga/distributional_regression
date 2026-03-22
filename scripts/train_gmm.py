@@ -18,6 +18,8 @@ from src.loss import sinkhorn_cost
 from src.utils.kernel import knn_bandwidth
 from src.data_utils.metadata import load_test_pair
 
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 def parse_args():
     p = argparse.ArgumentParser()
@@ -130,6 +132,7 @@ def main():
         verbose=True,
         mode=args.mode,
         base_val=id_base,
+        device=DEVICE,
     )
 
     val_losses = np.array(result["val_losses"])
