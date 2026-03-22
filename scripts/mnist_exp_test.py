@@ -6,7 +6,6 @@ import os, random, math
 from pathlib import Path
 import numpy as np
 import torch, torch.nn as nn
-from torch.utils.data import TensorDataset, DataLoader
 from torchvision.datasets import MNIST
 from torchvision.transforms import ToTensor
 from torchvision.utils import save_image

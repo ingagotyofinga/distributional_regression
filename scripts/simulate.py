@@ -1,4 +1,6 @@
 # scripts/simulate.py
+# run python scripts/simulate.py to generate (n_distributions, n_samples, dim) size dataset
+
 
 import torch
 from pathlib import Path

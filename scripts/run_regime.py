@@ -14,7 +14,7 @@ def parse_args():
     p.add_argument("--subset_seed", type=int, required=True)        # subsampling seed
     p.add_argument("--output_dir", type=str, required=True)
     # NEW: master dataset controls (so we don't derive path from (n,k))
-    p.add_argument("--master_n", type=int, default=1000)
+    p.add_argument("--master_n", type=int, default=10000)
     p.add_argument("--master_k", type=int, default=10000)
     p.add_argument("--meta_dir", type=str, default="data/generated/metadata")
     return p.parse_args()
