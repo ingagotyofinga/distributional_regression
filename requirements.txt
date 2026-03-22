@@ -1,0 +1,11 @@
+matplotlib~=3.9.2        # Plotting library
+torch~=2.2.2           # PyTorch (core DL framework)
+torchvision~=0.17.2      # PyTorch vision tools (for MNIST, transforms)
+geomloss~=0.2.6          # Sinkhorn divergence, OT
+numpy~=1.26.4            # Numerical ops
+scipy~=1.13.1            # Scientific computing
+scikit-learn~=1.4.2      # ML tools, k-NN, etc.
+pandas~=2.2.2            # Data manipulation
+seaborn~=0.13.2          # Statistical plotting
+tqdm~=4.67.1             # Progress bars
+statsmodels~=0.14.5      # Statistical modeling
